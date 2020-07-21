@@ -332,12 +332,21 @@
     </div>
       <div class="col-sm-0">
         <div style="text-align: left;margin-top: 1rem;">
-          &nbsp &nbsp &nbsp <strong> {{ request.user }} </strong></div> 
+          &nbsp &nbsp &nbsp <strong> {{ profile_user }} </strong>
+          {% if follow_tab %}
+          {% for i in follow_tab %}
+          {% if i.relation is False %}
+          <input type="submit" class="btn-outline-primary h-25 btn "  id="acceptfriend" value="Accept Request" style="margin-left:95px;margin-top:5px; border-radius: 2em;">
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        </div> 
       &nbsp &nbsp &nbsp {{ album_count }} Alubms &nbsp &nbsp &nbsp {{ following_count }} Following &nbsp &nbsp &nbsp {{ followers_count }} Followers
       <div style="text-align: left;">
         <div class="row" style="height: 55px;">
           <div style="text-align: center; padding-top: 10px;">
         <strong><b>&nbsp &nbsp &nbsp &nbsp Name &nbsp &nbsp </b></strong></div>
+        
         <input type="submit" class="btn-outline-primary h-50 btn"  id="addfriend" value="Add Friend" style="margin-left: 95px;margin-top:5px; border-radius: 2em;"> <br><br><br>
       
       </div>
@@ -452,6 +461,18 @@ $(function(){
 
 });
 
+$(function(){
+  $("#acceptfriend").click(function(){
+    $("#acceptfriend").hide();
+    $.ajax({
+            url: "{% url 'follow_accept' profile_user.pk %}",
+            data: {
+            
+            },
+            dataType : 'json'
+        });
+  });
+});
 
     </script>
 </body>
