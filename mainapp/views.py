@@ -15,10 +15,16 @@ def index(request):
     # for al in album:
     #     album_id.append(al.album_id)
     # print(album_id)
-    
-    context = {
-        "album":album,
+    follow_tab = Following.objects.filter(user_following__exact=user,relation__exact=False)
+    request_count = 0
+    for i in follow_tab:
+        if i.relation is True:
+            request_count = request_count + 1
 
+    context = {
+        "request_count":request_count,
+        "album":album,
+        "follow_tab":follow_tab
     }
     return render(request,'index.html',context)
 
@@ -87,7 +93,7 @@ def others_profile(request,username=None):
             "followers_count":followers_count,
             "following_count":following_count,
             "album_count":album_count,
-
+            
             }
     
         return render(request,'ui1.html',context)
@@ -290,7 +296,10 @@ def follow_request(request,id=None):
 
 def follow_accept(request,id=None):
     user = request.user
-    follow_req_accept = get_object_or_404(Following,pk=id)
+    user_follower = get_object_or_404(User,id=id)
+    
+    table_fol = Following.objects.filter(user__exact=user_follower,user_following__exact=user)
+    follow_req_accept = get_object_or_404(Following,user=user,)
     follow_req_accept.relation = True
     follow_req_accept.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
