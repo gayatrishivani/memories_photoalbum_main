@@ -73,9 +73,9 @@ class Album_settings(models.Model):
 
 class notifications(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    pause_all = models.BooleanField()
-    pause_comments = models.BooleanField()
-    pause_requests = models.BooleanField()
+    pause_all = models.BooleanField(default=True)
+    pause_comments = models.BooleanField(default=True)
+    pause_requests = models.BooleanField(default=True)
 
 class Account_setting(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)

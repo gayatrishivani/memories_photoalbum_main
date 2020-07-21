@@ -6,4 +6,4 @@ admin.site.register(Album)
 admin.site.register(sub_album)
 admin.site.register(Profile)
 admin.site.register(Following)
-
+admin.site.register(notifications)

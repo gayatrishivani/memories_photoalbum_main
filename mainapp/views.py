@@ -323,6 +323,7 @@ def block_user(request,b_id=None):
     block_tab.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-def ui_profile(request):
+def settings(request):
+    
+    return render(request,'settings.html')
 
-    return render(request,'ui1.html')

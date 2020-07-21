@@ -145,8 +145,29 @@
 
                 </form>
                 </li>
-                <li style="padding: 0px;margin: 0px;letter-spacing: 0px;"><a href="#" style="padding: 0px;"><span class="icon-notifications" style="padding-top: 15px;font-size: x-large;"></span> <span class="badge">1</span></a></li>
-                <li style="padding: 0px;margin: 0px;letter-spacing: 0px;"><a href="#" style="padding: 0px;"><span class="icon-settings" style="padding-top: 15px;font-size: x-large;"></span></a></li>
+                <li class="has-children" style="padding: 0px;margin: 0px;letter-spacing: 0px;"><a href="#" style="padding: 0px;"><span class="icon-notifications " style="padding-top: 15px;font-size: x-large;"></span> 
+                {% if request_count > 0 %}
+                <span class="badge">{{ request_count }}</span>
+                {% endif %}
+                </a>
+                <ul class="dropdown">
+                {% if request_count > 0 %}
+                {% for tab in follow_tab %}
+                  <li style="padding: 4%;">
+                  {% if tab.reation is False %}
+                  <a href="{% url 'others_profile' tab.user %}">{{ tab.user }}  sent you a friend requst </a>
+                  {% endif %}
+                  </li>
+                  {% endfor %}
+                  {% else %}
+                  <li style="padding: 4%;">
+                    you are up to date!
+                  </li>
+                {% endif %}
+                  
+                </ul>
+                </li>
+                <li style="padding: 0px;margin: 0px;letter-spacing: 0px;"><a href="{% url 'settings' %}" style="padding: 0px;"><span class="icon-settings" style="padding-top: 15px;font-size: x-large;"></span></a></li>
                 
               </ul>
             </nav>

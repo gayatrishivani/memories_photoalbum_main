@@ -10,6 +10,7 @@ from .forms import UserForm
 from .models import User
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.decorators import login_required
+from mainapp.models import notifications
 # Create your views here.
 def login(request):
     if request.method == 'POST':
@@ -64,6 +65,9 @@ def signup(request):
                         user = user_form.save(commit=False)
                         user.set_password(user.password)
                         user.save()
+                        notif = notifications()
+                        notif.user = user
+                        notif.save()
                         return render(request,'login/index.html')
                     else:
                         messages.error(request, 'Invalid Submission')
@@ -80,7 +84,9 @@ def signup(request):
     else:
         storage = messages.get_messages(request)
         storage.used = True
+        
         user_form = UserForm()
+        
         return render(request, 'login/signup.html', {'user_form': user_form})
 
 
