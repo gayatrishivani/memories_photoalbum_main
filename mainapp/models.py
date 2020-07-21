@@ -81,8 +81,8 @@ class Account_setting(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
 
 class Blocked(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
-    blocked_user = models.IntegerField()
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="user_block")
+    blocked_user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="blocked_user")
     relation = models.BooleanField(default=True)
 
 class Saved(models.Model):
@@ -90,7 +90,7 @@ class Saved(models.Model):
     user_saved = models.ForeignKey(User,on_delete=models.CASCADE)
 
 class Following(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
-    user_following = models.IntegerField(null=True,blank=True)
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="user")
+    user_following = models.ForeignKey(User,on_delete=models.CASCADE,related_name="user_following")
     relation = models.BooleanField(default=True)
 

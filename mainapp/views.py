@@ -42,7 +42,7 @@ def others_profile(request,username=None):
             "profile_user":profile_user,
         }
     
-        return render(request,'others_index.html',context)
+        return render(request,'ui1.html',context)
 
 
 def search(request):
