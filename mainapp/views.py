@@ -44,16 +44,7 @@ def others_profile(request,username=None):
     
         return render(request,'others_index.html',context)
 
-def follow(request,id=None):
-    user = request.user
-    print(user)
-    user_following = get_object_or_404(User,id=id)#user that is following. me following others
-    follow_tab = Following()
-    follow_tab.user = user
-    follow_tab.user_following = user_following.pk
 
-    follow_tab.save()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 def search(request):
     if request.method =="POST":
         q = request.POST.get('msearch')
@@ -186,7 +177,40 @@ def edit_profile(request):
 
 
     return render(request, 'edit.html')
-@login_required
+
+def edit_profile(request,id=None):
+    if request.method == 'POST':
+        user = request.user
+        
+        print(user)
+        new_profile = get_object_or_404(Profile,up_id=id)
+
+        
+        
+        
+        new_profile.bio = request.POST.get('bio')
+        print(new_profile.bio)
+        new_profile.name = request.POST.get('fname')
+        print(new_profile.name)
+        new_profile.gender = 3
+        print(new_profile.gender)
+        images = request.FILES.get('images')
+        if images is None:
+            new_profile.save()
+            return redirect('/')
+        else:
+            new_profile.images = images
+            content = images
+        
+            fs = FileSystemStorage()
+            fs.save('User_' + str(user)+"/"+images.name,images)
+            new_profile.save()
+            return redirect('/')
+
+
+    return render(request, 'edit.html')
+
+
 def profile(request):
     if request.method == 'POST':
         p_form = profileForm(request.POST,request.FILES, instance=request.user.profile)
@@ -202,3 +226,45 @@ def profile(request):
         }
         
         return render(request,'edit.html',context)
+
+
+def follow_request(request,id=None):
+    user = request.user
+    print(user)
+    user_following = get_object_or_404(User,id=id)#user that is following. me following others
+    follow_tab = Following()
+    follow_tab.user = user
+    follow_tab.user_following = user_following
+    follow_tab.relation = False
+
+    follow_tab.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def follow_accept(request,follow_id=None):
+    user = request.user
+    follow_req_accept = get_object_or_404(Following,pk=follow_id)
+    follow_req_accept.relation = True
+    follow_req_accept.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def follow_del_or_rej(requset,follow_id=None):#unfollow also
+    del_tab = get_object_or_404(Following,pk=follow_id)
+    del_tab.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def block_user(request,b_id=None):
+    user = request.user
+    
+    b_user= get_object_or_404(User,id=b_id)
+
+    block_tab = Blocked()
+    block_tab.user = user
+    block_tab.user_following = user_following.pk
+
+    block_tab.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def ui_profile(request):
+
+    return render(request,'ui1.html')
