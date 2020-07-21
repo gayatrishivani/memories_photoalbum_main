@@ -35,25 +35,64 @@ def others_profile(request,username=None):
     if profile_user.pk == user.pk:
         return redirect('/')
     else:
+        block_tab = Blocked.objects.filter(user__exact=user,blocked_user__exact=profile_user)
+        for block in block_tab:
+            if block.pk:
+                context={   
+
+            }
+            print(block.pk)
+
         
+        else:
+            tab_block = Blocked.objects.filter(user__exact=profile_user,blocked_user__exact=user)
+            for block_ in tab_block:
+                if block_:
+                    contex={
+                    
+                }
+                print(block_.pk)
+            
+            
+        follow_tab = Following.objects.filter(user__exact=user,user_following__exact=profile_user)
+        for i in follow_tab:
+            if i:
+            
+                if (i.relation == True):
+                    album = Album.objects.filter(user__exact=profile_user)
+
+                    context = {
+                    "album":album,
+                    "profile_user":profile_user,
+                    "follow_tab":follow_tab,
+                }
+
+            print(i.relation)
+
+        followers_count = 0
+        followers = Following.objects.filter(user_following=profile_user,relation=True)
+        for im in followers:
+            followers_count = followers_count + 1
+        following_count = 0
+        followers = Following.objects.filter(user=profile_user,relation=True)
+        for im in followers:
+            following_count = following_count + 1
+        album_count = 0
         album = Album.objects.filter(user__exact=profile_user)
+        for im in followers:
+            album_count = album_count + 1
         context = {
-            "album":album,
+            "follow_tab":follow_tab,
             "profile_user":profile_user,
-        }
+            "followers_count":followers_count,
+            "following_count":following_count,
+            "album_count":album_count,
+
+            }
     
-        return render(request,'others_index.html',context)
+        return render(request,'ui1.html',context)
 
-def follow(request,id=None):
-    user = request.user
-    print(user)
-    user_following = get_object_or_404(User,id=id)#user that is following. me following others
-    follow_tab = Following()
-    follow_tab.user = user
-    follow_tab.user_following = user_following.pk
 
-    follow_tab.save()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 def search(request):
     if request.method =="POST":
         q = request.POST.get('msearch')
@@ -186,19 +225,95 @@ def edit_profile(request):
 
 
     return render(request, 'edit.html')
-@login_required
-def profile(request):
+
+
+
+def profile(request,id=None):
     if request.method == 'POST':
-        p_form = profileForm(request.POST,request.FILES, instance=request.user.profile)
+        user = request.user
+        print(user)
         
-        if p_form. is_valid():
-            p_form.save()
-            messages.success(request,'your account has been updated' )
-            return redirect('profile')
-    else:
-        p_form = profileForm(instance=request.userr.profile)
-        context = {
-            'p_form': p_form
-        }
+        new_profile = Profile()
+
         
-        return render(request,'edit.html',context)
+        new_profile.user = user
+        print(new_profile.user)
+        new_profile.bio = request.POST.get('bio')
+        print(new_profile.bio)
+        new_profile.name = request.POST.get('fname')
+        print(new_profile.name)
+        new_profile.gender = 3
+        print(new_profile.gender)
+        images = request.FILES.get('images')
+        if images is None:
+            new_profile.save()
+            return redirect('/')
+        else:
+
+
+            new_profile.images = images
+            content = images
+        
+            fs = FileSystemStorage()
+            fs.save('User_' + str(user)+"/"+images.name,images)
+            new_profile.save()
+            return redirect('/')
+
+
+    return render(request, 'edit.html')
+
+
+
+    return render(request)
+
+def follow_request(request,id=None):
+    user = request.user
+    print(user)
+    user_following = get_object_or_404(User,id=id)#user that is following. me following others
+    
+    table_fol = Following.objects.filter(user__exact=user,user_following__exact=user_following)
+    for i in table_fol:
+        if i:
+            print(i)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        
+    
+    follow_tab = Following()
+    follow_tab.user = user
+    follow_tab.user_following = user_following
+    follow_tab.relation = False
+
+    follow_tab.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def follow_accept(request,id=None):
+    user = request.user
+    follow_req_accept = get_object_or_404(Following,pk=id)
+    follow_req_accept.relation = True
+    follow_req_accept.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def follow_del_or_rej(request,id=None):#unfollow also
+    user = request.user
+    del_tab = get_object_or_404(Following,user=user,user_following=id)
+    print(del_tab)
+    del_tab.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def block_user(request,b_id=None):
+    user = request.user
+    
+    b_user= get_object_or_404(User,id=b_id)
+
+    block_tab = Blocked()
+    block_tab.user = user
+    block_tab.user_following = user_following.pk
+
+    block_tab.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def ui_profile(request):
+
+    return render(request,'ui1.html')
