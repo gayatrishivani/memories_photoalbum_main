@@ -92,5 +92,5 @@ class Saved(models.Model):
 class Following(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="user")
     user_following = models.ForeignKey(User,on_delete=models.CASCADE,related_name="user_following")
-    relation = models.BooleanField(default=True)
+    relation = models.BooleanField(default=False)
 
