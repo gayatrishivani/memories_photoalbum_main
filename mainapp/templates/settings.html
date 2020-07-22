@@ -321,9 +321,74 @@
 
 
 <div class="site-section "  data-aos="fade" style="padding-top:100px">
-    <div class="container-fluid " style="margin-left: 15rem;">
-        hi
-    </div>
+    
+      <section style="margin-left: 345px; margin-right: 345px; margin-top: 15px;"> 
+        <div class="container-fluid ">
+          <h1 class="border-bottom" style="text-align: center;"><span class="icon-settings"></span>Settings</h1>
+          
+          <h3 style="text-decoration-line: underline; text-decoration-color: #aaaaaa;text-decoration-thickness: 1px;">
+            
+            Notifications</h3>
+            <div class="row">
+              <div class="col">
+                pause all notifications
+              </div>
+              <div class="col">
+                <span class="icon-toggle-off" onclick="toggling()" id="on-off" style="font-size: x-large; color: #20c997;"></span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                pause comments
+              </div>
+              <div class="col">
+                <span class="icon-toggle-off" onclick="toggling()" id="comments" style="font-size: x-large; color: #20c997;"></span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                pause requests
+              </div>
+              <div class="col">
+                <span class="icon-toggle-off" onclick="toggling()" id="request" style="font-size: x-large; color: #20c997;"></span>
+              </div>
+            </div>
+            <h3 style="text-decoration-line: underline; text-decoration-color: #aaaaaa;text-decoration-thickness: 1px;">
+            
+              Account</h3>
+              <div class="row">
+                <div class="col">
+                  <a href="#" ><span class="icon-portrait"></span> Profile</a>
+                </div>
+                
+              </div>
+              <div class="row">
+                <div class="col">
+                  <a href="#" ><span class="icon-bookmark"></span> Saved</a>
+                </div>
+                
+              </div>
+              <div class="row">
+                <div class="col">
+                  <a href="#" ><span class="icon-heart"></span> Liked</a>
+                </div>
+                
+              </div>
+              <div class="row">
+                <div class="col">
+                  <a href="#" ><span class="icon-block"></span> Blocked</a>
+                </div>
+                
+              </div>
+              <div class="row">
+                <div class="col">
+                  <a href="#" ><span class="icon-users"></span> Following</a>
+                </div>
+                
+              </div>
+              
+        </div>
+      </section>
 </div>
    
   <script src="{% static 'main/js/jquery-3.3.1.min.js' %}"></script>
@@ -400,10 +465,25 @@ $("#imgInp").change(function() {
   readURL(this);
 });
 
-
-
-
-    </script>
+  </script>
+  <script>
+    $(document).ready(function(){
+  $("#on-off").click(function(){
+    $(this).toggleClass('icon-toggle-on icon-toggle-off')
+    $("#comments").toggleClass('icon-toggle-on icon-toggle-off')
+    $("#request").toggleClass('icon-toggle-on icon-toggle-off');
+  });
+  $("#comments").click(function(){
+    
+    $(this).toggleClass('icon-toggle-on icon-toggle-off')
+    
+  });
+  $("#request").click(function(){
+    $(this).toggleClass('icon-toggle-on icon-toggle-off')
+    
+  });
+});
+  </script>
 </body>
 
 

@@ -15,16 +15,16 @@ def index(request):
     # for al in album:
     #     album_id.append(al.album_id)
     # print(album_id)
-    follow_tab = Following.objects.filter(user_following__exact=user,relation__exact=False)
-    request_count = 0
-    for i in follow_tab:
+    follow_table = Following.objects.filter(user_following__exact=user,relation__exact=False)
+    request_counting = 0
+    for i in follow_table:
         if i.relation is True:
             request_count = request_count + 1
 
     context = {
-        "request_count":request_count,
+        "request_counting":request_counting,
         "album":album,
-        "follow_tab":follow_tab
+        "follow_table":follow_table
     }
     return render(request,'index.html',context)
 
@@ -327,3 +327,45 @@ def settings(request):
     
     return render(request,'settings.html')
 
+def followers(request):
+    user = request.user
+    user_followers = Following.objects.filter(user_following__exact=user)
+    context = {
+        "user_followers":user_followers
+    }
+    return render(request,'followers.html',context)
+
+def following(request):
+    user = request.user
+    user_following = Following.objects.filter(user__exact=user)
+    context = {
+        "user_following":user_following
+    }
+    return render(request,'Following.html',context)
+
+def liked(request):
+    user = request.user
+    liked_user = Likes.objects.filter(liked_user__exact=user)
+    context = {
+        "liked_user":liked_user
+    }
+    return render(request,'liked.html',context)
+
+def saved(request):
+    user = request.user
+    liked_user = Likes.objects.filter(user_saved__exact=user)
+    context = {
+        "user_saved":user_saved
+    }
+    return render(request,'saved.html',context)
+
+def delete(request):
+    
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def show_album(request,id=None):
+    album_dis = get_object_or_404(Album,album_id=id)
+    context = {
+        "album_dis":album_dis,
+    }
+    return render(request,'show_album.html',context)

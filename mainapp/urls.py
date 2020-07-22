@@ -17,5 +17,10 @@ urlpatterns = [
     path('follow_del_or_rej/<int:id>/',follow_del_or_rej, name='follow_del_or_rej'),
     path('profile/',profile, name='profile'),
     path('follow_accept/<int:id>/',follow_accept, name='follow_accept'),
+    path('followers/',followers, name='followers'),
+    path('following/',following, name='following'),
+    path('liked/',liked, name='liked'),
+    path('saved/',saved, name='saved'),
+    path('show_album/<int:id>/',show_album, name='show_album'),
     
 ]
