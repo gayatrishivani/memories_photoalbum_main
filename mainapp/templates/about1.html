@@ -153,23 +153,27 @@
         max-height:450px;
         text-align:right;
     }
-    .oni {
-    opacity: 1; 
-    
-    
-    animation: opacityOn 1s normal forwards step-end;
-    animation-delay: 3s;
-}
-@keyframes opacityOn {
-    0% {
-        opacity: 1;
+    input[type=date], select {
+      width: 20%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: none;
+      border-radius: 0px;
+      box-sizing: border-box;
+       border-bottom:1px solid black;
+    }
+    input[type=text1], select {
+      width: 20%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: none;
+      border-radius: 0px;
+      box-sizing: border-box;
+       border-bottom:1px solid black;
     }
     
-    100% {
-        margin-top: -55px;
-        opacity: 0;
-    }
-  }
     </style>
 
     
@@ -197,12 +201,7 @@
     
     <header class="site-navbar fixed-top" role="banner">
       <div>
-      <style>
-        .sticky{
-          background-color: white;
-          border-bottom: 1px rgb(211, 211, 211) solid;
-        }
-      </style>
+      
       <div class="container-fluid fixed-top sticky ">
         <div class="row align-items-center py-3">
           
@@ -224,7 +223,7 @@
                 <li><a href="#"><span class="icon-feed" style="margin-right: 5px;"></span>Friends Album</a></li>
                 <li><a href="about.html"><span class="icon-pages" style="margin-right: 5px;"></span>About</a></li>
                 <li><a href="contact.html"><span class="icon-contact_mail" style="margin-right: 5px;"></span>Contact</a></li>
-                <li>    <form method="post" action="{% url 'search' %}">
+                <li>    <form action="#">
                   <style>
                   .active-pink-4 input[type=text]:focus:not([readonly]) {
                     border: 1px solid #f48fb1;
@@ -233,37 +232,16 @@
                     }
                   </style>
                  
-                  {% csrf_token %}
-                  <input type="text" class="active-pink-4 form-control"style="width: 250px;padding:5px;border-radius:50px;margin-left:15px;"id="search" name="msearch" placeholder="search for friends..">
+                  
+                  <input type="text" class="active-pink-4 form-control"style="width: 250px;padding:5px;border-radius:50px;margin-left:15px;"id="fname" name="fname" placeholder="search for friends..">
 
                   
                
 
                 </form>
                 </li>
-                <li class="has-children" style="padding: 0px;margin: 0px;letter-spacing: 0px;"><a href="#" style="padding: 0px;"><span class="icon-notifications " style="padding-top: 15px;font-size: x-large;"></span> 
-                {% if request_count > 0 %}
-                <span class="badge">{{ request_count }}</span>
-                {% endif %}
-                </a>
-                <ul class="dropdown">
-                {% if request_count > 0 %}
-                {% for tab in follow_tab %}
-                  <li style="padding: 4%;">
-                  {% if tab.reation is False %}
-                  <a href="{% url 'others_profile' tab.user %}">{{ tab.user }}  sent you a friend requst </a>
-                  {% endif %}
-                  </li>
-                  {% endfor %}
-                  {% else %}
-                  <li style="padding: 4%;">
-                    you are up to date!
-                  </li>
-                {% endif %}
-                  
-                </ul>
-                </li>
-                <li style="padding: 0px;margin: 0px;letter-spacing: 0px;"><a href="{% url 'settings' %}" style="padding: 0px;"><span class="icon-settings" style="padding-top: 15px;font-size: x-large;"></span></a></li>
+                <li style="padding: 0px;margin: 0px;letter-spacing: 0px;"><a href="#" style="padding: 0px;"><span class="icon-notifications" style="padding-top: 15px;font-size: x-large;"></span> <span class="badge">1</span></a></li>
+                <li style="padding: 0px;margin: 0px;letter-spacing: 0px;"><a href="#" style="padding: 0px;"><span class="icon-settings" style="padding-top: 15px;font-size: x-large;"></span></a></li>
                 
               </ul>
             </nav>
@@ -280,14 +258,12 @@
                 
               </a>
               
-              
-              {% csrf_token %}
-            <a href="{% url 'edit_profile' %}"><span class="icon-edit" style="margin-right: 5px;"></span>Edit profile</a>
+            <a href="#"><span class="icon-edit" style="margin-right: 5px;"></span>Edit profile</a>
             <a href="#"><span class="icon-bookmark" style="margin-right: 5px;"></span>Saved</span></a>
             <a href="#"><span class="icon-people" style="margin-right: 5px;"></span>Friends</a>
             <a href="#"><span class="icon-notifications" style="margin-right: 5px;"></span>noifications</a>
             <a href="#"><span class="icon-settings" style="margin-right: 5px;"></span>Settings</a>
-            <a href="{% url 'logout' %}"><span class="icon-sign-out" style="margin-right: 5px;"></span>Log out</a>
+            <a href="#"><span class="icon-sign-out" style="margin-right: 5px;"></span>Log out</a>
             <div class="absolutebottom">
             <ul class="site-menu js-clone-nav ml-auto list-unstyled d-flex text-md-center mb-0" data-class="social">
               
@@ -327,101 +303,61 @@
       </div>
      </div> 
     </header>
-<div style="position: relative;top: 100px;">
-<form method="post" enctype='multipart/form-data' >
-{% csrf_token %}
-  <div >
-    <div class="container-fluid">
-      {% if messages %}
 
-    {% for message in messages %}
-         <div class="alert alert-danger oni" style="text-align: center;">
-     {{ message }}
-  </div>
-   {% endfor %}
 
-{% endif %}
-      <div>
-        <h1 style="text-align: center;">Step1</h1>
-      </div>
-      <div class="col-sm-7" style="position: absolute;right: 75px;margin-top: 25px;">
-        <input type="text" id="main-title" name="title" placeholder="enter main title" class="main-title">
-        <textarea type="text" id="main-desc" name="main-desc" placeholder="write description if any..." class="main-title" style="min-height:300px;text-align: left;"></textarea>
+<div class="site-section"  data-aos="fade" style="padding-top:100px">
+  <div class="container-fluid">
+<style>
+    h1 {text-align: center;}
+    h2 {text-align: center;}
+.column {
+  float: left;
+  width: 33.33%;
+  padding: 5px;
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+    .column {
+        float: left;
+        width: 33.33%;
+        padding: 5px;
+      }
+      
+      /* Clearfix (clear floats) */
+      .row::after {
+        content: "";
+        clear: both;
+        display: table;
+      }
+    
+</style>
+    
+       <h1>ABOUT</h1><br>
+       <div class="row">
+       <div class="column">
+
+       <img src="https://i.pinimg.com/originals/c5/b2/32/c5b2325855ec4d3511c6e65c9276b17a.gif">
+       </div>
+       &nbsp; &nbsp;
+       
+       
+       <div class="column"><br><br><br>&nbsp;&nbsp;
+        <h1>Photon Brings You closer to the things you like and people you LOVE</h1>
         </div>
-      <div class="swiper-container col-sm-4" data-aos="fade" data-aos-delay="500" style="padding:1%;max-height: 550px;margin-left: 45px;position: absolute;border-right: black 1px solid;">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide" style="min-width:100%;min-height:100%;">
-              <div class="image-wrap" style="background-color: rgba(131, 130, 130, 0.4);">
-                
-                <div class="image-info">
-                  <input type="file" name="imagi" accept="image/*" id="imgInp"  class="btn btn-outline-white py-lg-4 px-lg-4 " >
-                </div>
-                <img id="blah" name="sub_images" src="#" alt="your image" >
-                
-              </div>
-            </div>
-          </div>
-      </div>
-      
-      
-    <div style="text-align:right;position: relative;top: 550px;right: 75px;">
-        <input type="submit" id="add" name="save" value="next" style="outline: none !important;
-        border: none;
-        background: transparent;
-        border-radius: 15px;
-        background-color: #5ad8b2;" >
-        
-        
-  </div>
-</form>
-
-</div>
-
-
- 
-  <!-- <div id="myModal" class="modal"> 
-
-
-  <div class="modal-content">
-    <span class="close">&times;</span>
-   
-   <form class="comment-form" action=".">
-    <div class="row">
-    <div class="swiper-container col-4" data-aos="fade" data-aos-delay="500" style="padding:1%;max-height:450px;margin: 0px 0px;">
-      <div class="swiper-wrapper">
-          <div class="swiper-slide" style="min-width:100%;min-height:100%;">
-            <div class="image-wrap" style="background-color: rgba(131, 130, 130, 0.4);">
-              <div class="image-info">
-                
-                 <a href="#" class="btn btn-outline-white py-lg-4 px-lg-4" style="font-size: x-large;"><spam class="icon-add" style="font-size: x-large;"></spam>Add Album </a> 
-                <input type="file" name="images" accept="image/*" id="imgInp" placeholder="choose image">
-              </div>
-              <img id="blah" src="#" alt="your image" >
-            </div>
-          </div>
         </div>
-     </div> 
-     <div class="col-8">
-    <input type="text" class="main-title sub-title" name="sub-title" placeholder="add sub title(if any...)">
-    <textarea type="text" class="main-title sub-title" name="description" placeholder="add description (if any...)" style="min-height:100px;"></textarea>
-  </div>
-  </div>
-    <div style="text-align:right">
-       <input type="button" id="add-more" name="add-more" value="save">
-       <input type="button" id="go-back" name="go-back" value="delete">
-    </div>
-   
-
-      
-   </form>
-  </div>
-
-</div>  -->
+        <img src="https://www.waytoosocial.com/wp-content/uploads/group-approach.jpg" ALIGN="right"><br><br><br>
+        <h1>Photon hepls you to the find the New One!!!</h1>
+       
 
 
+        
     
     
-  
 
   <script src="{% static 'main/js/jquery-3.3.1.min.js' %}"></script>
   <script src="{% static 'main/js/jquery-migrate-3.0.1.min.js' %}"></script>
@@ -495,14 +431,6 @@ span.onclick = function() {
 $("#imgInp").change(function() {
   readURL(this);
 });
-    </script>
-    <script>
-      var maint = getElementById("main-title")
-
-      if (maint != null) {
-        getElementById("add").disabled=false;
-
-      }
     </script>
 </body>
 </html>

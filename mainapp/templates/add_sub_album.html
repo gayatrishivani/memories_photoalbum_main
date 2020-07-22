@@ -376,8 +376,8 @@
   </div>
     <div style="text-align:right">
        <input type="submit" id="add" name="save" value="save&add more">
-       <input type="button" id="stop-add" name="stop-save" value="save">
-       <input type="button" id="go-back" name="go-back" value="delete">
+       <input type="submit" id="stop-add" name="stop-add" value="save">
+       <input type="submit" id="delete" name="delete" value="delete">
     </div>
    
 
@@ -404,13 +404,13 @@
   <script src="{% static 'main/js/bootstrap-datepicker.min.js' %}"></script>
   <script src="{% static 'main/js/swiper.min.js' %}"></script>
   <script src="{% static 'main/js/aos.js' %}"></script>
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="{% static 'main/js/picturefill.min.js' %}"></script>
   <script src="{% static 'main/js/lightgallery-all.min.js' %}"></script>
   <script src="{% static 'main/js/jquery.mousewheel.min.js' %}"></script>
 
   <script src="{% static 'main/js/main.js' %}"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  
   <script>
     $(document).ready(function(){
       $('#lightgallery').lightGallery();
@@ -465,5 +465,6 @@ $("#imgInp").change(function() {
   readURL(this);
 });
     </script>
+    
 </body>
 </html>

@@ -130,28 +130,35 @@ def single(request,pk=None,title=None):
 
 def add_sub_album(request,album_id=None):
     if request.method == 'POST':
-        new_sub_album = sub_album()
-
-        new_sub_album.sub_title = request.POST.get('sub_title')
-        main_album = get_object_or_404(Album,pk=album_id)
-        main_id = album_id
-        new_sub_album.main_title = main_album
-        
-        images = request.FILES.get('images')
-        new_sub_album.images = images
-        content = images
-        
-        fs = FileSystemStorage()
-        fs.save('User_' + str(new_sub_album.main_title.user)+"/" + str(new_sub_album.main_title.album_id)+"/"+images.name,images)
-        
-        new_sub_album.sub_description = request.POST.get('sub_description')        
-
-        if new_sub_album.main_title.album_id is None:
-            return render(request, 'add_sub_album.html')
+        if 'delete' in request.POST:
+            del_album = get_object_or_404(Album,pk=album_id)
+            del_album.delete()
+            return redirect('/')
         else:
-            new_sub_album.save()
+            new_sub_album = sub_album()
+
+            new_sub_album.sub_title = request.POST.get('sub_title')
+            main_album = get_object_or_404(Album,pk=album_id)
+            main_id = album_id
+            new_sub_album.main_title = main_album
             
-            return redirect('add_sub_album',album_id=main_album.album_id)
+            images = request.FILES.get('images')
+            new_sub_album.images = images
+            content = images
+            
+            fs = FileSystemStorage()
+            fs.save('User_' + str(new_sub_album.main_title.user)+"/" + str(new_sub_album.main_title.album_id)+"/"+images.name,images)
+            
+            new_sub_album.sub_description = request.POST.get('sub_description')        
+
+            if new_sub_album.main_title.album_id is None:
+                return render(request, 'add_sub_album.html')
+            else:
+                new_sub_album.save()
+                if 'stop-add' in request.POST:
+                    return redirect('/')
+                else:
+                    return redirect('add_sub_album',album_id=main_album.album_id)
 
     else:
         
@@ -364,8 +371,69 @@ def delete(request):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def show_album(request,id=None):
+    user = request.user
     album_dis = get_object_or_404(Album,album_id=id)
+    user_like = Likes.objects.filter(album_id__exact=id,liked_user=user)
+    like_store = Likes.objects.filter(album_id__exact=id)
+    user_bookmark = Saved.objects.filter(Saved_album__exact=id,user_saved=user)
+    l_count = 0
+    for l in like_store:
+        l_count = l_count + 1
+    comments_store = Comments.objects.filter(album_id__exact=id)
+    c_count = 0
+    for c in comments_store:
+        c_count = c_count + 1
     context = {
         "album_dis":album_dis,
+        "like_store":like_store,
+        "user_like":user_like,
+        "l_count":l_count,
+        "user_bookmark":user_bookmark,
+        "c_count":c_count,
+        "comments_store":comments_store,
     }
     return render(request,'show_album.html',context)
+def about_profile(request):
+        return render(request,'about1.html')
+def contact_profile(request):
+        return render(request,'contact1.html')
+
+def save_like(request,id=None):
+    user = request.user
+    like_store = Likes()
+    like_store.album_id = get_object_or_404(Album,pk=id)
+    like_store.liked_user = user
+    like_store.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def un_like(request,id=None):
+    user = request.user
+    like_store = Likes.objects.filter(album_id__exact=id,liked_user=user)
+    
+    like_store.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def bookmark(request,id=None):
+    user = request.user
+    bookmark_store = Saved()
+    bookmark_store.Saved_album = get_object_or_404(Album,pk=id)
+    bookmark_store.user_saved = user
+    bookmark_store.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def del_bookmark(request,id=None):
+    user = request.user
+    bookmark_store = Likes.objects.filter(album_id__exact=id,liked_user=user)
+    bookmark_store.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def add_comments(request,id=None):
+    user = request.user
+    if request.method == 'POST':
+        add_com = Comments()
+        add_com.album_id = get_object_or_404(Album,pk=id)
+        add_com.comment_text = request.POST.get('comment-sav')
+        add_com.comment_user = user
+        add_com.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
