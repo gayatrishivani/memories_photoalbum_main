@@ -46,7 +46,7 @@ def others_profile(request,username=None):
             
             
         follow_tab = Following.objects.filter(user__exact=profile_user,user_following__exact=user)
-        mw_follow = Following.objects.filter(user__exact=user,user_following__exact=profile_user)
+        mw_follow = Following.objects.filter(user__exact=user,user_following__exact=profile_user,relation=True)
         print(follow_tab)
         for i in follow_tab:
             if i:
