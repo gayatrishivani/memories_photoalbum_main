@@ -388,7 +388,8 @@
         {% if my_follow  %}
         {% for i in my_follow %}
         
-        {% if i.relation is True %}
+        
+        {% if i.relation is False %}
         <input type="submit" class="btn-outline-primary h-50 btn"  id="addfriend" value="Unfollow" style="margin-left: 95px;margin-top:5px; border-radius: 2em;"> <br><br><br>
         {% endif %}
         {% endfor %}
