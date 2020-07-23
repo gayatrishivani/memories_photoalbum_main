@@ -22,5 +22,14 @@ urlpatterns = [
     path('liked/',liked, name='liked'),
     path('saved/',saved, name='saved'),
     path('show_album/<int:id>/',show_album, name='show_album'),
+    path('about_profile/',about_profile, name='about_profile'),
+    path('contact_profile/',contact_profile, name='contact_profile'),
+    path('save_like/<int:id>/',save_like, name='save_like'),
+    path('un_like/<int:id>/',un_like, name='un_like'),
+    path('bookmark/<int:id>/',bookmark, name='bookmark'),
+    path('unsave/<int:id>/',del_bookmark, name='del_bookmark'),
+    path('add_comment/<int:id>/',add_comments, name='add_comment'),
+    path('feed/',feed, name='feed'),
+    
     
 ]

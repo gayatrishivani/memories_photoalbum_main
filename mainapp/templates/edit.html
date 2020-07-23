@@ -225,9 +225,9 @@
                                   
                                 </li>
                 
-                <li><a href="#"><span class="icon-feed" style="margin-right: 5px;"></span>Friends Album</a></li>
-                <li><a href="about.html"><span class="icon-pages" style="margin-right: 5px;"></span>About</a></li>
-                <li><a href="contact.html"><span class="icon-contact_mail" style="margin-right: 5px;"></span>Contact</a></li>
+                <li><a href="{% url 'feed' %}"><span class="icon-feed" style="margin-right: 5px;"></span>Friends Album</a></li>
+                <li><a href="{% url 'about_profile' %}"><span class="icon-pages" style="margin-right: 5px;"></span>About</a></li>
+                <li><a href="{% url 'contact_profile' %}"><span class="icon-contact_mail" style="margin-right: 5px;"></span>Contact</a></li>
                 <li>    <form method="post" action="{% url 'search' %}">
                   <style>
                   .active-pink-4 input[type=text]:focus:not([readonly]) {
@@ -246,17 +246,17 @@
                 </form>
                 </li>
                 <li class="has-children" style="padding: 0px;margin: 0px;letter-spacing: 0px;"><a href="#" style="padding: 0px;"><span class="icon-notifications " style="padding-top: 15px;font-size: x-large;"></span> 
-                {% if request_count > 0 %}
-                <span class="badge">{{ request_count }}</span>
+                {% if request_counting > 0 %}
+                <span class="badge">{{ request_counting }}</span>
                 {% endif %}
                 </a>
                 <ul class="dropdown">
-                {% if request_count > 0 %}
-                {% for tab in follow_tab %}
+                {% if request_counting %}
+                {% for tab in follow_table %}
                   <li style="padding: 4%;">
-                  {% if tab.reation is False %}
+                  
                   <a href="{% url 'others_profile' tab.user %}">{{ tab.user }}  sent you a friend requst </a>
-                  {% endif %}
+                    
                   </li>
                   {% endfor %}
                   {% else %}
@@ -287,10 +287,10 @@
               
               {% csrf_token %}
             <a href="{% url 'edit_profile' %}"><span class="icon-edit" style="margin-right: 5px;"></span>Edit profile</a>
-            <a href="#"><span class="icon-bookmark" style="margin-right: 5px;"></span>Saved</span></a>
-            <a href="#"><span class="icon-people" style="margin-right: 5px;"></span>Friends</a>
-            <a href="#"><span class="icon-notifications" style="margin-right: 5px;"></span>noifications</a>
-            <a href="#"><span class="icon-settings" style="margin-right: 5px;"></span>Settings</a>
+            <a href="{% url 'saved' %}"><span class="icon-bookmark" style="margin-right: 5px;"></span>Saved</span></a>
+            <a href="{% url 'following' %}"><span class="icon-people" style="margin-right: 5px;"></span>Friends</a>
+            <a href="{% url 'settings' %}"><span class="icon-notifications" style="margin-right: 5px;"></span>noifications</a>
+            <a href="{% url 'settings' %}"><span class="icon-settings" style="margin-right: 5px;"></span>Settings</a>
             <a href="{% url 'logout' %}"><span class="icon-sign-out" style="margin-right: 5px;"></span>Log out</a>
             <div class="absolutebottom">
             <ul class="site-menu js-clone-nav ml-auto list-unstyled d-flex text-md-center mb-0" data-class="social">
@@ -333,6 +333,7 @@
     </header>
 
 
+
 <div class="site-section"  data-aos="fade" style="padding-top:100px">
   <div class="container-fluid">
     <center>
@@ -346,9 +347,9 @@
 <label for="fname">Name:      </label><br>
     <input type="text1" id="fname" name="fname" ><br>
     <label for="lname">Bio:       </label><br>
-    <input type="text1" id="bio" name="bio"  placeholder="Name"><br>
+    <input type="text1" id="bio" name="bio"  placeholder="Add Your Bio....."><br>
     <label for="lname">User Name: </label><br>
-    <input type="text1" id="lname" name="lname" value="Anu"><br>
+    <input type="text1" id="lname" name="lname" value="{{user}}"><br>
     <label for="lname">Gender: </label>
     
 <input type="radio" name="gender" id="male"> 

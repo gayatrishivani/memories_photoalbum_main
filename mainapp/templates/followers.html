@@ -216,7 +216,12 @@
     
     <header class="site-navbar fixed-top" role="banner">
       <div>
-      
+      <style>
+        .sticky{
+          background-color: white;
+          border-bottom: 1px rgb(211, 211, 211) solid;
+        }
+      </style>
       <div class="container-fluid fixed-top sticky ">
         <div class="row align-items-center py-3">
           
@@ -235,10 +240,10 @@
                                   
                                 </li>
                 
-                <li><a href="#"><span class="icon-feed" style="margin-right: 5px;"></span>Friends Album</a></li>
-                <li><a href="about.html"><span class="icon-pages" style="margin-right: 5px;"></span>About</a></li>
-                <li><a href="contact.html"><span class="icon-contact_mail" style="margin-right: 5px;"></span>Contact</a></li>
-                <li>    <form action="#">
+                <li><a href="{% url 'feed' %}"><span class="icon-feed" style="margin-right: 5px;"></span>Friends Album</a></li>
+                <li><a href="{% url 'about_profile' %}"><span class="icon-pages" style="margin-right: 5px;"></span>About</a></li>
+                <li><a href="{% url 'contact_profile' %}"><span class="icon-contact_mail" style="margin-right: 5px;"></span>Contact</a></li>
+                <li>    <form method="post" action="{% url 'search' %}">
                   <style>
                   .active-pink-4 input[type=text]:focus:not([readonly]) {
                     border: 1px solid #f48fb1;
@@ -247,16 +252,37 @@
                     }
                   </style>
                  
-                  
-                  <input type="text" class="active-pink-4 form-control"style="width: 250px;padding:5px;border-radius:50px;margin-left:15px;"id="fname" name="fname" placeholder="search for friends..">
+                  {% csrf_token %}
+                  <input type="text" class="active-pink-4 form-control"style="width: 250px;padding:5px;border-radius:50px;margin-left:15px;"id="search" name="msearch" placeholder="search for friends..">
 
                   
                
 
                 </form>
                 </li>
-                <li style="padding: 0px;margin: 0px;letter-spacing: 0px;"><a href="#" style="padding: 0px;"><span class="icon-notifications" style="padding-top: 15px;font-size: x-large;"></span> <span class="badge">1</span></a></li>
-                <li style="padding: 0px;margin: 0px;letter-spacing: 0px;"><a href="#" style="padding: 0px;"><span class="icon-settings" style="padding-top: 15px;font-size: x-large;"></span></a></li>
+                <li class="has-children" style="padding: 0px;margin: 0px;letter-spacing: 0px;"><a href="#" style="padding: 0px;"><span class="icon-notifications " style="padding-top: 15px;font-size: x-large;"></span> 
+                {% if request_counting > 0 %}
+                <span class="badge">{{ request_counting }}</span>
+                {% endif %}
+                </a>
+                <ul class="dropdown">
+                {% if request_counting %}
+                {% for tab in follow_table %}
+                  <li style="padding: 4%;">
+                  
+                  <a href="{% url 'others_profile' tab.user %}">{{ tab.user }}  sent you a friend requst </a>
+                    
+                  </li>
+                  {% endfor %}
+                  {% else %}
+                  <li style="padding: 4%;">
+                    you are up to date!
+                  </li>
+                {% endif %}
+                  
+                </ul>
+                </li>
+                <li style="padding: 0px;margin: 0px;letter-spacing: 0px;"><a href="{% url 'settings' %}" style="padding: 0px;"><span class="icon-settings" style="padding-top: 15px;font-size: x-large;"></span></a></li>
                 
               </ul>
             </nav>
@@ -273,12 +299,14 @@
                 
               </a>
               
-            <a href="#"><span class="icon-edit" style="margin-right: 5px;"></span>Edit profile</a>
-            <a href="#"><span class="icon-bookmark" style="margin-right: 5px;"></span>Saved</span></a>
-            <a href="#"><span class="icon-people" style="margin-right: 5px;"></span>Friends</a>
-            <a href="#"><span class="icon-notifications" style="margin-right: 5px;"></span>noifications</a>
-            <a href="#"><span class="icon-settings" style="margin-right: 5px;"></span>Settings</a>
-            <a href="#"><span class="icon-sign-out" style="margin-right: 5px;"></span>Log out</a>
+              
+              {% csrf_token %}
+            <a href="{% url 'edit_profile' %}"><span class="icon-edit" style="margin-right: 5px;"></span>Edit profile</a>
+            <a href="{% url 'saved' %}"><span class="icon-bookmark" style="margin-right: 5px;"></span>Saved</span></a>
+            <a href="{% url 'following' %}"><span class="icon-people" style="margin-right: 5px;"></span>Friends</a>
+            <a href="{% url 'settings' %}"><span class="icon-notifications" style="margin-right: 5px;"></span>noifications</a>
+            <a href="{% url 'settings' %}"><span class="icon-settings" style="margin-right: 5px;"></span>Settings</a>
+            <a href="{% url 'logout' %}"><span class="icon-sign-out" style="margin-right: 5px;"></span>Log out</a>
             <div class="absolutebottom">
             <ul class="site-menu js-clone-nav ml-auto list-unstyled d-flex text-md-center mb-0" data-class="social">
               
@@ -318,6 +346,7 @@
       </div>
      </div> 
     </header>
+
 
 
 <div class="site-section "  data-aos="fade" style="padding-top:100px">
