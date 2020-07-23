@@ -359,7 +359,8 @@
 
           <div class="row">
             <div class="col">
-              {{ user_following.user_following }}
+              <a href="{% url 'others_profile' user_following.user_following %}"><h1>{{ user_following.user_following }}</h1></a>
+              
             </div>
           </div>
           {% endfor %}

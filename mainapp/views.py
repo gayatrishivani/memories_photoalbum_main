@@ -7,6 +7,7 @@ from .forms import profileForm
 from user.models import User
 from django.http import HttpResponseRedirect
 # Create your views here.
+
 @login_required(login_url='/login/')
 def index(request):
     user = request.user
@@ -66,14 +67,23 @@ def others_profile(request,username=None):
                     
                     for im in album:
                         album_count = album_count + 1
-
+                    follow_table = Following.objects.filter(user_following__exact=user,relation__exact=False)
+                    request_counting = 0
+                    for i in follow_table:
+                        if i.relation is False:
+                            request_counting = request_counting + 1
+                    pro = Profile.objects.filter(user__exact=profile_user)
+                    print(pro)
                     context = {
                     "follow_tab":follow_tab,
-            "profile_user":profile_user,
-            "followers_count":followers_count,
-            "following_count":following_count,
-            "album_count":album_count,
-            "my_follow":mw_follow
+                "profile_user":profile_user,
+                "followers_count":followers_count,
+                "following_count":following_count,
+                "album_count":album_count,
+                "my_follow":mw_follow,
+                "album":album,
+                "request_counting":request_counting,
+                "pro":pro,
                     }
                 
                     return render(request,'ui1.html',context)
@@ -92,13 +102,22 @@ def others_profile(request,username=None):
         album = Album.objects.filter(user__exact=profile_user)
         for im in album:
             album_count = album_count + 1
+        follow_table = Following.objects.filter(user_following__exact=user,relation__exact=False)
+        request_counting = 0
+        for i in follow_table:
+            if i.relation is False:
+                request_counting = request_counting + 1
+        pro = Profile.objects.filter(user__exact=profile_user)
+        print(pro)
         context = {
             "follow_tab":follow_tab,
             "profile_user":profile_user,
             "followers_count":followers_count,
             "following_count":following_count,
             "album_count":album_count,
-            "my_follow":mw_follow
+            "my_follow":mw_follow,
+            "request_counting":request_counting,
+            "pro":pro
             }
     
         return render(request,'ui1.html',context)
@@ -112,14 +131,19 @@ def feed(request):
         album_feed = Album.objects.filter(user__exact=unif)
         
         feed.append(album_feed)
-
-    print(feed)
+    follow_table = Following.objects.filter(user_following__exact=user,relation__exact=False)
+    request_counting = 0
+    for i in follow_table:
+            if i.relation is False:
+                request_counting = request_counting + 1
     context={
         "feed":feed,
+        "request_counting":request_counting
     }
     return render(request,'follow_feed.html',context)
 
 def search(request):
+    user = request.user
     if request.method =="POST":
         q = request.POST.get('msearch')
 
@@ -128,20 +152,32 @@ def search(request):
         profiles_search = User.objects.filter(username__icontains=q)
         for p in profiles_search:
             print(p.username)
+        follow_table = Following.objects.filter(user_following__exact=user,relation__exact=False)
+        request_counting = 0        
+        for i in follow_table:
+            if i.relation is False:
+                request_counting = request_counting + 1
         context={
             "p_search":profiles_search,
+            "request_counting":request_counting
         }
 
         return render(request,'search.html',context)
 
 def single(request,pk=None,title=None):
+    user = request.user
     album = get_object_or_404(Album,pk=pk)
     sub = sub_album.objects.filter(main_title__exact=album)
-    
+    follow_table = Following.objects.filter(user_following__exact=user,relation__exact=False)
+    request_counting = 0
+    for i in follow_table:
+        if i.relation is False:
+            request_counting = request_counting + 1
     context={
         "title":title,
         "sub":sub,
         "al_id":pk,
+        "request_counting":request_counting
     }
 
 
@@ -355,38 +391,70 @@ def block_user(request,b_id=None):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def settings(request):
-    
-    return render(request,'settings.html')
+    user = request.user
+    follow_table = Following.objects.filter(user_following__exact=user,relation__exact=False)
+    request_counting = 0
+    for i in follow_table:
+        if i.relation is False:
+            request_counting = request_counting + 1
+    context={
+        "request_counting":request_counting,
+    }
+    return render(request,'settings.html',context)
 
 def followers(request):
     user = request.user
-    user_followers = Following.objects.filter(user_following__exact=user)
+    user_followers = Following.objects.filter(user_following__exact=user,relation=True)
+    follow_table = Following.objects.filter(user_following__exact=user,relation__exact=False)
+    request_counting = 0
+    for i in follow_table:
+        if i.relation is False:
+            request_counting = request_counting + 1
     context = {
-        "user_followers":user_followers
+        "user_followers":user_followers,
+        "request_counting":request_counting
     }
     return render(request,'followers.html',context)
 
 def following(request):
     user = request.user
     user_following = Following.objects.filter(user__exact=user,relation=True)
+    follow_table = Following.objects.filter(user_following__exact=user,relation__exact=False)
+    request_counting = 0
+    for i in follow_table:
+        if i.relation is False:
+            request_counting = request_counting + 1
     context = {
-        "user_following":user_following
+        "user_following":user_following,
+        "request_counting":request_counting
     }
     return render(request,'Following.html',context)
 
 def liked(request):
     user = request.user
     liked_user = Likes.objects.filter(liked_user__exact=user)
+    follow_table = Following.objects.filter(user_following__exact=user,relation__exact=False)
+    request_counting = 0
+    for i in follow_table:
+        if i.relation is False:
+            request_counting = request_counting + 1
     context = {
-        "liked_user":liked_user
+        "liked_user":liked_user,
+        "request_counting":request_counting,
     }
     return render(request,'liked.html',context)
 
 def saved(request):
     user = request.user
     user_saved = Saved.objects.filter(user_saved__exact=user)
+    follow_table = Following.objects.filter(user_following__exact=user,relation__exact=False)
+    request_counting = 0
+    for i in follow_table:
+        if i.relation is False:
+            request_counting = request_counting + 1
     context = {
-        "user_saved":user_saved
+        "user_saved":user_saved,
+        "request_counting":request_counting
     }
     return render(request,'saved.html',context)
 
@@ -407,6 +475,11 @@ def show_album(request,id=None):
     c_count = 0
     for c in comments_store:
         c_count = c_count + 1
+    follow_table = Following.objects.filter(user_following__exact=user,relation__exact=False)
+    request_counting = 0
+    for i in follow_table:
+        if i.relation is False:
+            request_counting = request_counting + 1
     context = {
         "album_dis":album_dis,
         "like_store":like_store,
@@ -415,9 +488,11 @@ def show_album(request,id=None):
         "user_bookmark":user_bookmark,
         "c_count":c_count,
         "comments_store":comments_store,
+        "request_counting":request_counting
     }
     return render(request,'show_album.html',context)
 def about_profile(request):
+    
         return render(request,'about1.html')
 def contact_profile(request):
         return render(request,'contact1.html')

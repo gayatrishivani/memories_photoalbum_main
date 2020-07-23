@@ -356,7 +356,13 @@
     
        <div class="row justify-content-center">
       <div class="col-sm-0">
-      <img src="{% static 'main/images/profile/image1.jpg' %}" style="width: 150px; height: 150px;border:3px rgb(209, 208, 208) solid;border-radius: 50%!important;margin-bottom: 15px;"alt="Image">
+        {% for p in pro %}
+          {% if p.profile_img %}
+          <img src="{{ p.profile_img.url }}" style="width: 150px; height: 150px;border:3px rgb(209, 208, 208) solid;border-radius: 50%!important;margin-bottom: 15px;"alt="Image">
+          {% else %}
+          <img src="{% static 'main/images/profile/image1.jpg' %}" style="width: 150px; height: 150px;border:3px rgb(209, 208, 208) solid;border-radius: 50%!important;margin-bottom: 15px;"alt="Image">
+          {% endif %}
+          {% endfor %} 
     </div>
       <div class="col-sm-0">
         <div style="text-align: left;margin-top: 1rem;">
@@ -376,7 +382,9 @@
       <div style="text-align: left;">
         <div class="row" style="height: 55px;">
           <div style="text-align: center; padding-top: 10px;">
-        <strong><b>&nbsp &nbsp &nbsp &nbsp Name &nbsp &nbsp </b></strong></div>
+        <strong><b>&nbsp &nbsp &nbsp &nbsp {% for p in pro %}
+          {{ p.name }}
+          {% endfor %} &nbsp &nbsp </b></strong></div>
         {% if my_follow  %}
         {% for i in my_follow %}
         
@@ -390,14 +398,62 @@
       
       {% endif %}
       </div>
-      hi
+      {% for p in pro %}
+      {{ p.bio }}
+      {% endfor %}
       </div>
     </div>
     </div>
     ---------------------------------------------------------------------------------------------------------------
+    {% if my_follow  %}
+    {% for i in my_follow %}
+    
+    {% if i.relation is True %}
+    {% for a in album %}
+              
 
+          
+              <div class="swiper-container col-6" data-aos="fade" data-aos-delay="500" style="padding:1%;max-height:450px;margin: 0px 0px;border-radius: 5%;">
+                <div class="swiper-wrapper" style="max-height:450px;" >
+                    <div class="swiper-slide" style="min-width:100%;min-height:100%;">
+                      <div class="image-wrap">
+                        
+                        <div style="position: absolute;margin-bottom: -14px;z-index: 1;right: 0px;font-size: x-large">
+                            <div class="dropdown-w3">
+                            <button class="dropbtn-w3"><span class="icon-ellipsis-v" style="margin-right: 5px;right: 0px;color: white;cursor: pointer;"></span>
+                            </button>
+                            
+                          </div>
+                                              
+                      </div>
+                        <div class="image-info">
+                          
+                          <h2 class="mb-3" style="cursor: context-menu;background-color:rgba(131, 125, 125, 0.329);">{{ a.title }}</h2>
+                          
+                          <a href="{% url 'show_album' a.pk %}" class="btn btn-outline-white py-2 px-4">More Photos</a>
+                        
+                        </div>
+                        {% if a.Album_cover_img %}
+                        <img src="{{ a.Album_cover_img.url }}" alt="Image">
+                        {% else %}
+                        <div style="background-color: rgba(0, 0, 0,0.97);height: inherit;">
+                          
+                        </div>
+                        {% endif %}
+                      </div>
+                        
+                    </div>
+                  </div>
+          </div>
+            
+          {% endfor %}
+    {% endif %}
+    {% endfor %}
+    {% else %}
     <h2> Private Account 
-        <br><br>To see their Alubm you can Add them to your friend list</h2>
+      <br><br>To see their Alubm you can Add them to your friend list</h2>
+    {% endif %}
+
     
     </center>
   <script src="{% static 'main/js/jquery-3.3.1.min.js' %}"></script>
