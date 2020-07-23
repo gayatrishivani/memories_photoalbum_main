@@ -419,21 +419,24 @@
                     </div>
                    
                   </div>
-                  
+                  {% for comment in comments_store %}
                   <div class="row" style="margin-top: 5%;">
                     <div class="col-1" >
-                    user pic
+                    
                     </div>
                     <div class="col-11">
                       <div class="row">
-                        username
+                        {{ comment.comment_user.username }}
                       </div>
                       <div class="row">
-                        comment display
+                        {{ comment.comment_text }}
                       </div>
                   </div>
+                  
                   </div>
+                  {% endfor %}
                 </div>
+                      
             </div>
         </section>
 </div>

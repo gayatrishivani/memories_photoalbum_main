@@ -29,5 +29,7 @@ urlpatterns = [
     path('bookmark/<int:id>/',bookmark, name='bookmark'),
     path('unsave/<int:id>/',del_bookmark, name='del_bookmark'),
     path('add_comment/<int:id>/',add_comments, name='add_comment'),
+    path('feed/',feed, name='feed'),
+    
     
 ]
